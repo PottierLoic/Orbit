@@ -2,6 +2,8 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+> [!NOTE]
+> Work in progress. This README describes the intended final state of Orbit, not its current one.
 
 Orbit is a high-performance fractal renderer written in C++.
 It features multiple compute backends, multithreaded tile rendering, and supports both interactive exploration and high-resolution image/video export.
