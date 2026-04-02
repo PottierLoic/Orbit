@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "complex.hpp"
 
 template <typename T>
