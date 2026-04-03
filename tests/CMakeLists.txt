@@ -11,6 +11,7 @@ add_executable(orbit-tests
         core/test_complex.cpp
         core/test_iterate.cpp
         core/test_mandelbrot.cpp
+        core/test_julia.cpp
         main.cpp
 )
 
