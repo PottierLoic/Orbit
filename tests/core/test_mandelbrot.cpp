@@ -65,7 +65,6 @@ TEST_CASE("MandelbrotSet cardioid_check: symmetric about real axis") {
 
 TEST_CASE("iterate: point inside Mandelbrot set reaches max_iterations") {
     IterationParams params;
-    params.max_iterations = 200;
 
     MandelbrotSet<double> f;
     // c = 0+0i is inside the set
@@ -75,7 +74,6 @@ TEST_CASE("iterate: point inside Mandelbrot set reaches max_iterations") {
 
 TEST_CASE("iterate: point outside Mandelbrot set escapes") {
     IterationParams params;
-    params.max_iterations = 200;
 
     MandelbrotSet<double> f;
     // c = 2+2i is clearly outside
