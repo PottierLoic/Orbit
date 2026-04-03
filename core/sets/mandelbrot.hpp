@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../complex.hpp"
+#include "complex.hpp"
 
 template <typename T>
 struct MandelbrotSet {
@@ -19,5 +19,8 @@ struct MandelbrotSet {
         }
 
         return false;
+    }
+    [[nodiscard]] std::pair<Complex<T>, Complex<T>> make_zc(const Complex<T>& pixel, const Complex<T>&) const {
+        return {Complex<T>(0, 0), pixel};
     }
 };
