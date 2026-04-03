@@ -5,10 +5,10 @@
 #include "iteration_params.hpp"
 
 template <typename T, typename Func>
-[[nodiscard]] PixelValue<T> iterate(Complex<T> z, const Complex<T>& c, Func f, const IterationParams& params) {
+[[nodiscard]] PixelValue iterate(Complex<T> z, const Complex<T>& c, Func f, const IterationParams& params) {
     if constexpr (requires { f.cardioid_check(c); }) {
         if (params.cardioid_check && f.cardioid_check(c)) {
-            return PixelValue<T>(params.max_iterations, Complex<T>(0, 0));
+            return PixelValue{params.max_iterations, Complex<double>(0, 0)};
         }
     }
 
@@ -17,5 +17,5 @@ template <typename T, typename Func>
         z = f(z, c);
         i++;
     }
-    return PixelValue<T>(i, z);
+    return PixelValue{i, Complex<double>(static_cast<double>(z.real()), static_cast<double>(z.imag()))};
 }

@@ -4,8 +4,7 @@
 
 #include "complex.hpp"
 
-template <typename T>
 struct PixelValue {
     uint32_t iterations = 0;
-    Complex<T> final_z = Complex<T>(0, 0);
+    Complex<double> final_z = Complex<double>(0, 0);
 };
