@@ -10,7 +10,7 @@ add_compile_options(-Wall -Wextra -Werror)
 
 add_subdirectory(core)
 add_subdirectory(backend)
-add_subdirectory(render)
+add_subdirectory(color)
 add_subdirectory(cli)
 add_subdirectory(gui)
 
