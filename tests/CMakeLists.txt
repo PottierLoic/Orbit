@@ -12,11 +12,14 @@ add_executable(orbit-tests
         core/test_iterate.cpp
         core/test_mandelbrot.cpp
         core/test_julia.cpp
+        color/test_interpolation.cpp
+        color/test_palette.cpp
         main.cpp
 )
 
 target_link_libraries(orbit-tests PRIVATE
         orbit-core
+        orbit-color
         doctest::doctest
 )
 
