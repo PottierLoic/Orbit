@@ -34,3 +34,21 @@
 
     return RGBA{r, g, b, 255};
 }
+
+[[nodiscard]] inline RGBA interpolate_cosine(const Palette& palette, double t) {
+    PaletteIndices indices = get_palette_indices(palette, t);
+    RGBA color_a = palette.colors[indices.idx_a];
+    RGBA color_b = palette.colors[indices.idx_b];
+
+    double mu = (1.0 - std::cos(std::numbers::pi * indices.local_t)) / 2.0;
+
+    uint8_t r = static_cast<uint8_t>(color_a.r * (1.0 - mu) + color_b.r * mu);
+    uint8_t g = static_cast<uint8_t>(color_a.g * (1.0 - mu) + color_b.g * mu);
+    uint8_t b = static_cast<uint8_t>(color_a.b * (1.0 - mu) + color_b.b * mu);
+
+    return RGBA{r, g, b, 255};
+}
+
+[[nodiscard]] inline RGBA interpolate_none(const Palette& palette, double t) {
+    return palette.colors[static_cast<size_t>(t) % palette.colors.size()];
+}
