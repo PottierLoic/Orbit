@@ -5,6 +5,7 @@ enum class InterpolationMode {
     Cosine,
     HSV,
     HSVCyclic,
+    None,
 };
 
 struct PaletteIndices {
