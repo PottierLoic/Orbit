@@ -5,19 +5,18 @@
 #include "export/image_export.hpp"
 
 #include <vector>
-#include <iostream>
 
 int main () {
   RenderParams params;
-  params.width = 15360;
-  params.height = 8640;
+  params.width = 1920;
+  params.height = 1080;
   params.set = Set::Mandelbrot;
   params.zoom = "1.0";
   params.center_real = "0.0";
   params.center_imag = "0.0";
 
   IterationParams iteration_params;
-  iteration_params.max_iterations = 1000;
+  iteration_params.max_iterations = 100;
   iteration_params.cardioid_check = true;
 
   Palette palette;
@@ -37,8 +36,8 @@ int main () {
   std::vector<RGBA> colors = apply_palette(palette, pixels, true, iteration_params.max_iterations);
 
   ImageExportParams export_params;
-  export_params.width = 15360;
-  export_params.height = 8640;
+  export_params.width = 1920;
+  export_params.height = 1080;
   export_params.output_path = "test2.png";
   export_params.file_type = ImageFileType::PNG;
 
