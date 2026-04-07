@@ -14,6 +14,7 @@ add_subdirectory(color)
 add_subdirectory(cli)
 add_subdirectory(gui)
 add_subdirectory(export)
+add_subdirectory(benchmark)
 
 include(CTest)
 add_subdirectory(tests)
