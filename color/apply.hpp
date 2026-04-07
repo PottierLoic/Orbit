@@ -16,7 +16,7 @@
     return static_cast<double>(pixel.iterations);
 }
 
-[[nodiscard]] std::vector<RGBA> apply_palette(const Palette& palette, const std::vector<PixelValue>& pixels, bool smooth) {
+[[nodiscard]] std::vector<RGBA> apply_palette(const Palette& palette, const std::vector<PixelValue>& pixels, bool smooth, uint32_t max_iterations) {
     std::vector<RGBA> result;
     result.reserve(pixels.size());
 
@@ -29,6 +29,10 @@
     }
 
     for (const auto& pixel: pixels) {
+        if (pixel.iterations == max_iterations) { 
+            result.push_back(palette.interior_color);
+            continue;
+        }
         double t = pixel_to_double(pixel, smooth);
         result.push_back(interpolation_function(palette, t));
     }
