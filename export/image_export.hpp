@@ -7,4 +7,4 @@
 #include "color/rgba.hpp"
 #include "export_params.hpp"
 
-void export_png(const std::vector<RGBA>& pixels, const ExportParams& params);
+void export_image(const std::vector<RGBA>& pixels, const ImageExportParams& params);
