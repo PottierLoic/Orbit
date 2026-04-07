@@ -9,11 +9,11 @@
 
 int main () {
   RenderParams params;
-  params.width = 1920;
-  params.height = 1080;
+  params.width = 15360;
+  params.height = 8640;
   params.set = Set::Mandelbrot;
-  params.zoom = "5";
-  params.center_real = "-1";
+  params.zoom = "1.0";
+  params.center_real = "0.0";
   params.center_imag = "0.0";
 
   IterationParams iteration_params;
@@ -30,14 +30,15 @@ int main () {
     RGBA{125, 87, 230,   255},
     RGBA{0,   98,   112,   255},
   };
+  palette.interior_color = RGBA{0, 0, 0, 0};
 
-  auto backend = make_backend(Backend::CpuSingleThreaded);
+  auto backend = make_backend(Backend::CpuMultiThreaded);
   std::vector<PixelValue> pixels = backend->render_frame(params, iteration_params);
   std::vector<RGBA> colors = apply_palette(palette, pixels, true, iteration_params.max_iterations);
 
   ImageExportParams export_params;
-  export_params.width = 1920;
-  export_params.height = 1080;
+  export_params.width = 15360;
+  export_params.height = 8640;
   export_params.output_path = "test2.png";
   export_params.file_type = ImageFileType::PNG;
 
