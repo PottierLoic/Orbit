@@ -13,6 +13,7 @@ add_subdirectory(backend)
 add_subdirectory(color)
 add_subdirectory(cli)
 add_subdirectory(gui)
+add_subdirectory(export)
 
 include(CTest)
 add_subdirectory(tests)
