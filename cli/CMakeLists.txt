@@ -1,6 +1,6 @@
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(orbit-cli cli_export_image2.cpp)
+add_executable(orbit-cli cli_export_video.cpp)
 
 target_link_libraries(orbit-cli PUBLIC orbit-backend orbit-export)
 
