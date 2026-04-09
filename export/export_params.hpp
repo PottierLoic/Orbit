@@ -19,7 +19,7 @@ struct ImageExportParams {
 
 enum class VideoFileType {
     MP4,
-    WAV,
+    AVI,
     //TODO depending on compatiblity with FFmpeg
 };
 
