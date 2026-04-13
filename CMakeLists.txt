@@ -15,6 +15,7 @@ add_subdirectory(cli)
 add_subdirectory(gui)
 add_subdirectory(export)
 add_subdirectory(benchmark)
+add_subdirectory(external)
 
 include(CTest)
 add_subdirectory(tests)
