@@ -5,8 +5,6 @@
 
 #include "export/video_export.hpp"
 
-#include <vector>
-
 int main () {
     RenderParams render_params;
     render_params.set = Set::Mandelbrot;
