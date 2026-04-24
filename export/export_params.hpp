@@ -9,12 +9,14 @@ enum class ImageFileType {
     TGA,
     JPG,
 };
+inline const char* image_file_type_names[] = { "PNG", "BMP", "TGA", "JPG"};
+constexpr size_t image_file_type_count = 4;
 
 struct ImageExportParams {
-    uint32_t width;
-    uint32_t height;
+    uint32_t width = 640;
+    uint32_t height = 480;
     std::string output_path;
-    ImageFileType file_type;
+    ImageFileType file_type = ImageFileType::PNG;
 };
 
 enum class VideoFileType {
@@ -22,11 +24,13 @@ enum class VideoFileType {
     AVI,
     //TODO depending on compatiblity with FFmpeg
 };
+inline const char* video_file_type_names[] = { "MP4", "AVI"};
+constexpr size_t video_file_type_count = 2;
 
 struct VideoExportParams {
-    uint32_t width;
-    uint32_t height;
+    uint32_t width = 640;
+    uint32_t height = 480;
     std::string output_path;
-    VideoFileType file_type;
-    uint32_t fps;
+    VideoFileType file_type = VideoFileType::MP4;
+    uint32_t fps = 30;
 };
