@@ -3,7 +3,7 @@
 #include <string>
 
 struct AnimationParams {
-    std::string start_zoom;
-    std::string final_zoom;
+    std::string start_zoom = "0.5";
+    std::string final_zoom = "10.0";
     double zoom_factor;
 };
