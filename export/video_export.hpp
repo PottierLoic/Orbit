@@ -2,7 +2,7 @@
 
 #include "backend/backend.hpp"
 #include "backend/render_params.hpp"
-#include "backend/animation_params.hpp"
+#include "animation_params.hpp"
 #include "export_params.hpp"
 #include "core/iteration_params.hpp"
 #include "color/palette.hpp"
