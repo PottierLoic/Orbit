@@ -1,6 +1,6 @@
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(orbit-gui gui.cpp)
+add_executable(orbit-gui main.cpp app.cpp ui.cpp)
 
 target_link_libraries(orbit-gui PRIVATE
         orbit-backend
