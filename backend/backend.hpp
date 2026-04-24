@@ -15,6 +15,8 @@ enum class Backend {
     Gpu,
     CpuArbitraryPrecision
 };
+inline const char* backend_names[] = { "CPU Single Threaded", "CPU Multi Threaded", "CPU Tiled", "GPU", "CPU Arbitrary Precision"};
+constexpr size_t backend_count = 5;
 
 class IFractalBackend {
 public:
