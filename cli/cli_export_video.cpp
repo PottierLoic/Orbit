@@ -1,6 +1,6 @@
 #include "backend/backend.hpp"
 #include "backend/backend_factory.hpp"
-#include "backend/animation_params.hpp"
+#include "export/animation_params.hpp"
 #include "color/apply.hpp"
 
 #include "export/video_export.hpp"
