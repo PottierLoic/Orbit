@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 #include "rgba.hpp"
 #include "interpolation_mode.hpp"
@@ -10,4 +11,5 @@ struct Palette {
     std::vector<RGBA> colors;
     RGBA interior_color;
     double cycle_length;
+    std::string name;
 };
