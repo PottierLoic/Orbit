@@ -9,22 +9,27 @@
 #include <imgui_impl_opengl3.h>
 
 #include <string>
+#include <optional>
 
 #include "ui.hpp"
 #include "backend/backend.hpp"
 #include "color/palette.hpp"
 #include "color/palette_presets.hpp"
+#include "renderer.hpp"
 
 class App {
 public:
     App(uint32_t width, uint32_t height, const std::string& title);
     ~App();
+    void on_resize(int width, int height);
     void run();
 
 private:
     GLFWwindow* _window = nullptr;
     uint32_t _width;
     uint32_t _height;
+
+    std::optional<Renderer> _renderer;
 
     Backend _current_backend = Backend::CpuMultiThreaded;
     std::unique_ptr<IFractalBackend> _backend;
@@ -37,6 +42,8 @@ private:
     ImageExportParams _image_export_params;
     VideoExportParams _video_export_params;
     AnimationParams _animation_params;
+
+    bool _smooth_coloring = true;
 
     UI _ui;
     UIContext _ui_context;
