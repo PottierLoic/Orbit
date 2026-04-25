@@ -15,9 +15,9 @@
     } else if (size == 1) {
         return PaletteIndices{0, 0, 1.0};
     } else {
-        double scaled = ((t / palette.cycle_length) * (size - 1));
+        double scaled = (t / palette.cycle_length) * size;
         double local_t = scaled - std::floor(scaled);
-        size_t idx_a = static_cast<size_t>(std::floor(scaled)) % (size - 1);
+        size_t idx_a = static_cast<size_t>(std::floor(scaled)) % size;
         size_t idx_b = (idx_a + 1) % size;
         return PaletteIndices{idx_a, idx_b, local_t};
     }
