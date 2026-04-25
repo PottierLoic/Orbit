@@ -6,21 +6,10 @@
 
 void UI::display_panels(UIContext &context) {
     // TODO give parameters to corresponding panels
-    if (_enable_render_panel) display_render_panel(context);
     if (_enable_export_panel) display_export_panel(context);
     if (_enable_palette_panel) display_palette_panel(context);
     if (_enable_fractal_settings_panel) display_fractal_settings_panel(context);
     if (_enable_rendering_panel) display_rendering_panel(context);
-}
-
-void UI::display_render_panel(UIContext& /*context*/) {
-    if (!ImGui::Begin("Render")) {
-        ImGui::End();
-        return;
-    }
-
-    ImGui::Text("Render placeholder");
-    ImGui::End();
 }
 
 void UI::display_export_panel(UIContext& context) {
@@ -119,7 +108,7 @@ void UI::display_palette_panel(UIContext& context) {
             for (int j = 0; j < n - 1; j++) {
                 float x0 = gradient_x + (120.0f * j) / (n - 1);
                 float x1 = gradient_x + (120.0f * (j + 1)) / (n - 1);
-                draw_list->AddRectFilledMultqiColor(
+                draw_list->AddRectFilledMultiColor(
                     ImVec2(x0, pos.y + 2), ImVec2(x1, pos.y + size.y - 2),
                     ImGui::ColorConvertFloat4ToU32(to_imvec4(p.colors[j])),
                     ImGui::ColorConvertFloat4ToU32(to_imvec4(p.colors[j + 1])),
@@ -148,7 +137,9 @@ void UI::display_palette_panel(UIContext& context) {
 
     ImGui::NewLine();
     ImGui::InputText("Name", &context.palettes[context.current_palette].name);
-    ImGui::InputDouble("Cycle length", &context.palettes[context.current_palette].cycle_length);
+    if (ImGui::InputDouble("Cycle length", &context.palettes[context.current_palette].cycle_length)) {
+        context.need_render = true;
+    }
 
     if (ImGui::BeginPopup("color_picker_popup")) {
         RGBA& color = context.palettes[context.current_palette].colors[_editing_color_index];
@@ -158,6 +149,7 @@ void UI::display_palette_panel(UIContext& context) {
             color.g = static_cast<uint8_t>(col[1] * 255.0f);
             color.b = static_cast<uint8_t>(col[2] * 255.0f);
             color.a = static_cast<uint8_t>(col[3] * 255.0f);
+            context.need_render = true;
         }
         ImGui::EndPopup();
     }
@@ -208,5 +200,11 @@ void UI::display_rendering_panel(UIContext& context) {
         ImGui::Text("pixels inside of these regions.");
         ImGui::EndTooltip();
     }
+
+    ImGui::Separator();
+    if (ImGui::Checkbox("Smooth coloring", &context.smooth_coloring)) {
+        context.need_render = true;
+    }
+
     ImGui::End();
 }
