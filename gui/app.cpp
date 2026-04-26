@@ -14,6 +14,11 @@ App::App(uint32_t width, uint32_t height, const std::string& title)
         throw std::runtime_error("Failed to initialize GLFW");
     }
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
     _window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
     if (!_window) {
         throw std::runtime_error("Failed to create GLFW window");
@@ -37,7 +42,7 @@ App::App(uint32_t width, uint32_t height, const std::string& title)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(_window, true);
-    ImGui_ImplOpenGL3_Init("#version 460");
+    ImGui_ImplOpenGL3_Init("#version 410");
 }
 
 void App::run() {
