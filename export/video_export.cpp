@@ -6,7 +6,7 @@
 
 #include "color/apply.hpp"
 
-void export_video(IFractalBackend& backend, const Palette& palette, const RenderParams& render_params, const IterationParams& iteration_params, const VideoExportParams& export_params, const AnimationParams& animation_params, bool smooth_coloring) {
+void export_video(IFractalBackend& backend, const Palette palette, const RenderParams render_params, const IterationParams iteration_params, const VideoExportParams export_params, const AnimationParams animation_params, bool smooth_coloring) {
     double start = std::stod(animation_params.start_zoom);
     double end = std::stod(animation_params.final_zoom);
     uint32_t frame_count = static_cast<uint32_t>(
