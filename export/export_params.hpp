@@ -17,6 +17,7 @@ struct ImageExportParams {
     uint32_t height = 480;
     std::string center_real = "0.0";
     std::string center_imag = "0.0";
+    std::string zoom = "0.5";
     std::string output_path = "output.png";
     ImageFileType file_type = ImageFileType::PNG;
 };
@@ -34,6 +35,9 @@ struct VideoExportParams {
     uint32_t height = 480;
     std::string center_real = "0.0";
     std::string center_imag = "0.0";
+    std::string start_zoom = "0.5";
+    std::string final_zoom = "10.0";
+    double zoom_factor = 2.0;
     std::string output_path = "output.mp4";
     VideoFileType file_type = VideoFileType::MP4;
     uint32_t fps = 30;
