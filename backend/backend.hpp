@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <functional>
+#include <cstdint>
 
 #include "render_params.hpp"
 #include "core/iteration_params.hpp"
@@ -20,7 +22,9 @@ constexpr size_t backend_count = 5;
 
 class IFractalBackend {
 public:
+    using ProgressCallback = std::function<bool()>;
+
     virtual ~IFractalBackend() = default;
-    [[nodiscard]] virtual std::vector<PixelValue> render_frame(const RenderParams& render_params, const IterationParams& iteration_params) = 0;
+    [[nodiscard]] virtual std::vector<PixelValue> render_frame(const RenderParams& render_params, const IterationParams& iteration_params, ProgressCallback on_progress = nullptr) = 0;
     [[nodiscard]] virtual std::string name() const = 0;
 };
