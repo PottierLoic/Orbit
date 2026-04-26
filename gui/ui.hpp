@@ -4,7 +4,7 @@
 #include "backend/render_params.hpp"
 #include "backend/backend.hpp"
 #include "export/export_params.hpp"
-#include "export/animation_params.hpp"
+#include "export/export_task.hpp"
 #include "color/palette.hpp"
 
 struct UIContext {
@@ -20,10 +20,11 @@ struct UIContext {
     // Export
     ImageExportParams& image_export_params;
     VideoExportParams& video_export_params;
-    AnimationParams& animation_params;
 
     // Misc
     bool& smooth_coloring;
+
+    std::vector<std::shared_ptr<ExportTask>>& tasks;
 
     // Flags
     bool need_render = true;
@@ -40,13 +41,16 @@ private:
     bool _enable_palette_panel = true; // display palette colors, cycle_length, palette list dropdown, possibility to add a new palette, modify existing ones
     bool _enable_fractal_settings_panel = true; // zoom level, coordinates, max iterations, etc.
     bool _enable_rendering_panel = true; // cardioid check, cycling value checks etc
+    bool _enable_task_panel = true;
 
     void display_export_panel(UIContext& context);
     void display_palette_panel(UIContext& context);
     void display_fractal_settings_panel(UIContext& context);
     void display_rendering_panel(UIContext& context);
+    void display_task_panel(UIContext& context);
 
     int _editing_color_index = 0;
+    std::shared_ptr<ExportTask> _selected_task = nullptr;
 public:
     void display_panels(UIContext& context);
 };

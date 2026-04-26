@@ -2,6 +2,11 @@
 #include <imgui.h>
 #include <imgui_stdlib.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#include <shellapi.h>
+#endif
+
 #include "helper.hpp"
 
 void UI::display_panels(UIContext &context) {
@@ -10,6 +15,7 @@ void UI::display_panels(UIContext &context) {
     if (_enable_palette_panel) display_palette_panel(context);
     if (_enable_fractal_settings_panel) display_fractal_settings_panel(context);
     if (_enable_rendering_panel) display_rendering_panel(context);
+    if (_enable_task_panel) display_task_panel(context);
 }
 
 void UI::display_export_panel(UIContext& context) {
@@ -41,9 +47,11 @@ void UI::display_export_panel(UIContext& context) {
 
             ImGui::InputText("Real", &context.image_export_params.center_real);
             ImGui::InputText("Imaginary", &context.image_export_params.center_imag);
+            ImGui::InputText("Zoom", &context.image_export_params.zoom);
             if (ImGui::Button("Use current position")) {
                 context.image_export_params.center_real = context.render_params.center_real;
                 context.image_export_params.center_imag = context.render_params.center_imag;
+                context.image_export_params.zoom = context.render_params.zoom;
             }
 
             ImGui::Separator();
@@ -83,16 +91,26 @@ void UI::display_export_panel(UIContext& context) {
 
             ImGui::InputText("Real", &context.video_export_params.center_real);
             ImGui::InputText("Imaginary", &context.video_export_params.center_imag);
-            if (ImGui::Button("Use current position")) {
+            if (ImGui::Button("Use current")) {
                 context.video_export_params.center_real = context.render_params.center_real;
                 context.video_export_params.center_imag = context.render_params.center_imag;
             }
 
             ImGui::Separator();
 
-            ImGui::InputText("Start zoom", &context.animation_params.start_zoom);
-            ImGui::InputText("Final zoom", &context.animation_params.final_zoom);
-            ImGui::InputDouble("Zoom factor", &context.animation_params.zoom_factor);
+            ImGui::InputText("Start zoom", &context.video_export_params.start_zoom);
+            ImGui::SameLine();
+            if (ImGui::Button("Use current##start_zoom_button")) {
+                context.video_export_params.start_zoom = context.render_params.zoom;
+            }
+
+            ImGui::InputText("Final zoom", &context.video_export_params.final_zoom);
+            ImGui::SameLine();
+            if (ImGui::Button("Use current##final_zoom_button")) {
+                context.video_export_params.final_zoom = context.render_params.zoom;
+            }
+
+            ImGui::InputDouble("Zoom factor", &context.video_export_params.zoom_factor);
 
             ImGui::Separator();
 
@@ -186,6 +204,12 @@ void UI::display_fractal_settings_panel(UIContext& context) {
         return;
     }
 
+    int current_fractal = static_cast<int>(context.render_params.set);
+    if (ImGui::Combo("Set", &current_fractal, set_names, IM_ARRAYSIZE(set_names))) {
+        context.render_params.set = static_cast<Set>(current_fractal);
+        context.need_render = true;
+    }
+
     if (ImGui::InputText("Real", &context.render_params.center_real)) {
         context.need_render = true;
     }
@@ -196,6 +220,10 @@ void UI::display_fractal_settings_panel(UIContext& context) {
     int max_iterations = static_cast<int>(context.iteration_params.max_iterations);
     if (ImGui::InputInt("Max iterations", &max_iterations)) {
         context.iteration_params.max_iterations = static_cast<uint32_t>(std::max(0, max_iterations));
+        context.need_render = true;
+    }
+
+    if (ImGui::InputText("Zoom", &context.render_params.zoom)) {
         context.need_render = true;
     }
     ImGui::End();
@@ -227,6 +255,65 @@ void UI::display_rendering_panel(UIContext& context) {
     ImGui::Separator();
     if (ImGui::Checkbox("Smooth coloring", &context.smooth_coloring)) {
         context.need_render = true;
+    }
+
+    ImGui::End();
+}
+
+void UI::display_task_panel(UIContext& context) {
+    if (!ImGui::Begin("Task panel")) {
+        ImGui::End();
+        return;
+    }
+
+    for (auto& task : context.tasks) {
+        ImGui::AlignTextToFramePadding();
+        std::string selectable_id = (task->type == FileType::Image ? "[IMG] " : "[VID] ") + task->filename + "##" +
+                                    std::to_string(reinterpret_cast<uintptr_t>(task.get()));
+        bool selected = (_selected_task == task);
+        if (ImGui::Selectable(selectable_id.c_str(), selected, ImGuiSelectableFlags_SpanAllColumns)) {
+            _selected_task = (selected ? nullptr : task);
+        }
+
+        uint32_t progress = task->progress;
+        uint32_t total = task->total;
+        float percent = total > 0 ? (float) progress / float(total) : 0.0f;
+
+        ImGui::SameLine();
+        ImGui::ProgressBar(percent, ImVec2(150, 0));
+        ImGui::SameLine();
+        ImGui::Text("%u/%u", progress, total);
+        ImGui::SameLine();
+
+        switch (task->status.load()) {
+            case TaskStatus::Running: ImGui::TextColored(ImVec4(1,1,0,1), "Running"); break;
+            case TaskStatus::Coloring: ImGui::TextColored(ImVec4(0,0,1,1), "Coloring"); break;
+            case TaskStatus::Writing: ImGui::TextColored(ImVec4(1,0,1,1), "Writing"); break;
+            case TaskStatus::Done: ImGui::TextColored(ImVec4(0,1,0,1), "Done"); break;
+            case TaskStatus::Cancelled: ImGui::TextColored(ImVec4(0,1,0,1), "Done"); break;
+        }
+    }
+
+    if (_selected_task) {
+        ImGui::Separator();
+        ImGui::Text("File: %s", _selected_task->filename.c_str());
+        ImGui::Text("Progress: %u / %u", _selected_task->progress.load(), _selected_task->total);
+
+        if (_selected_task->status == TaskStatus::Running) {
+            if (ImGui::Button("Stop")) {
+                _selected_task->status = TaskStatus::Cancelled;
+            }
+        } else {
+            if (ImGui::Button("Open file")) {
+#ifdef _WIN32
+                ShellExecuteA(nullptr, "open", _selected_task->filename.c_str(), nullptr, nullptr, SW_SHOW);
+#elif __APPLE__
+                system(("open " + _selected_task->filename).c_str());
+#else
+                system(("xdg-open " + _selected_task->filename).c_str());
+#endif
+            }
+        }
     }
 
     ImGui::End();
