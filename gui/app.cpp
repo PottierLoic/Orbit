@@ -1,9 +1,10 @@
 #include "app.hpp"
 #include "backend/backend_factory.hpp"
 #include "color/apply.hpp"
+#include "export/image_export.hpp"
+#include "export/video_export.hpp"
 
 #include <stdexcept>
-#include <iostream> // TODO REMOVE
 
 App::App(uint32_t width, uint32_t height, const std::string& title)
     : _palettes(get_all_palettes()),
@@ -57,12 +58,30 @@ void App::run() {
         }
 
         if (_ui_context.need_image_export) {
-            std::cout << "need image export" << std::endl; // TODO CALL IMAGE EXPORT FUNCTION INSTEAD
+            auto export_backend = make_backend(_current_backend);
+            RenderParams render_snapshot = _render_params;
+            render_snapshot.width = _image_export_params.width;
+            render_snapshot.height = _image_export_params.height;
+
+            IterationParams iter_snapshot = _iteration_params;
+            ImageExportParams export_snapshot = _image_export_params;
+            Palette palette_snapshot = _palettes[_current_palette];
+            bool smooth_snapshot = _smooth_coloring;
+            export_image(*export_backend, palette_snapshot, render_snapshot, iter_snapshot, export_snapshot, smooth_snapshot);
             _ui_context.need_image_export = false;
         }
 
         if (_ui_context.need_video_export) {
-            std::cout << "need video export" << std::endl; // TODO CALL VIDEO EXPORT FUNCTION INSTEAD
+            auto export_backend = make_backend(_current_backend);
+            RenderParams render_snapshot = _render_params;
+            render_snapshot.width = _image_export_params.width;
+            render_snapshot.height = _image_export_params.height;
+
+            IterationParams iter_snapshot = _iteration_params;
+            ImageExportParams export_snapshot = _image_export_params;
+            Palette palette_snapshot = _palettes[_current_palette];
+            bool smooth_snapshot = _smooth_coloring;
+            export_video(*export_backend, palette_snapshot, render_snapshot, iter_snapshot, _video_export_params, _animation_params, smooth_snapshot);
             _ui_context.need_video_export = false;
         }
 
