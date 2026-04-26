@@ -3,13 +3,15 @@
 #include "color/apply.hpp"
 #include "export/image_export.hpp"
 #include "export/video_export.hpp"
+#include "export/export_params.hpp"
 
 #include <stdexcept>
 
 App::App(uint32_t width, uint32_t height, const std::string& title)
     : _palettes(get_all_palettes()),
       _current_palette(0),
-      _ui_context{_render_params, _iteration_params, _current_backend, _current_palette, _palettes, _image_export_params, _video_export_params, _animation_params, _smooth_coloring}{
+      _ui_context{_render_params, _iteration_params, _current_backend, _current_palette, _palettes,
+                  _image_export_params, _video_export_params, _smooth_coloring, _export_tasks} {
     if (!glfwInit()) {
         throw std::runtime_error("Failed to initialize GLFW");
     }
@@ -63,14 +65,18 @@ void App::run() {
         }
 
         if (_ui_context.need_image_export) {
-            auto export_backend = make_backend(_current_backend);
-            export_image(*export_backend, _palettes[_current_palette], _render_params, _iteration_params, _image_export_params, _smooth_coloring);
+            auto export_backend = std::shared_ptr<IFractalBackend>(make_backend(_current_backend).release());
+            auto task = std::make_shared<ExportTask>();
+            _export_tasks.push_back(task);
+            export_image(export_backend, _palettes[_current_palette], _render_params, _iteration_params, _image_export_params, _smooth_coloring, task);
             _ui_context.need_image_export = false;
         }
 
         if (_ui_context.need_video_export) {
-            auto export_backend = make_backend(_current_backend);
-            export_video(*export_backend, _palettes[_current_palette], _render_params, _iteration_params, _video_export_params, _animation_params, _smooth_coloring);
+            auto export_backend = std::shared_ptr<IFractalBackend>(make_backend(_current_backend).release());
+            auto task = std::make_shared<ExportTask>();
+            _export_tasks.push_back(task);
+            export_video(export_backend, _palettes[_current_palette], _render_params, _iteration_params, _video_export_params, _smooth_coloring, task);
             _ui_context.need_video_export = false;
         }
 

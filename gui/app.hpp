@@ -16,6 +16,7 @@
 #include "color/palette.hpp"
 #include "color/palette_presets.hpp"
 #include "renderer.hpp"
+#include "export/export_task.hpp"
 
 class App {
 public:
@@ -41,9 +42,10 @@ private:
     IterationParams _iteration_params;
     ImageExportParams _image_export_params;
     VideoExportParams _video_export_params;
-    AnimationParams _animation_params;
 
     bool _smooth_coloring = true;
+
+    std::vector<std::shared_ptr<ExportTask>> _export_tasks;
 
     UI _ui;
     UIContext _ui_context;
