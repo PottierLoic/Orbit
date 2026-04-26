@@ -1,6 +1,5 @@
 #include "backend/backend.hpp"
 #include "backend/backend_factory.hpp"
-#include "export/animation_params.hpp"
 #include "color/apply.hpp"
 
 #include "export/video_export.hpp"
@@ -27,7 +26,7 @@ int main () {
     };
     palette.interior_color = RGBA{0, 0, 0, 0};
 
-    auto backend = make_backend(Backend::CpuMultiThreaded);
+    auto backend = std::shared_ptr<IFractalBackend>(make_backend(Backend::CpuMultiThreaded).release());
 
     VideoExportParams export_params;
     export_params.width = 1920;
@@ -35,13 +34,11 @@ int main () {
     export_params.output_path = "test2.mp4";
     export_params.file_type = VideoFileType::MP4;
     export_params.fps = 60;
+    export_params.start_zoom = "0.5";
+    export_params.final_zoom = "70.0";
+    export_params.zoom_factor = 2.0;
 
-    AnimationParams animation_params;
-    animation_params.start_zoom = "0.5";
-    animation_params.final_zoom = "70.0";
-    animation_params.zoom_factor = 2.0;
-
-    export_video(*backend, palette, render_params, iteration_params, export_params, animation_params, false);
+    export_video(backend, palette, render_params, iteration_params, export_params, false);
 
     return 0;
 }
