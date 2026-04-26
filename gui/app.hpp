@@ -23,6 +23,7 @@ public:
     App(uint32_t width, uint32_t height, const std::string& title);
     ~App();
     void on_resize(int width, int height);
+    void on_scroll(double y_offset);
     void run();
 
 private:

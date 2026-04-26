@@ -12,6 +12,9 @@ App::App(uint32_t width, uint32_t height, const std::string& title)
       _current_palette(0),
       _ui_context{_render_params, _iteration_params, _current_backend, _current_palette, _palettes,
                   _image_export_params, _video_export_params, _smooth_coloring, _export_tasks} {
+    _width = width;
+    _height = height;
+
     if (!glfwInit()) {
         throw std::runtime_error("Failed to initialize GLFW");
     }
@@ -31,6 +34,11 @@ App::App(uint32_t width, uint32_t height, const std::string& title)
         App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
         glViewport(0, 0, width, height);
         app->on_resize(width, height);
+    });
+
+    glfwSetScrollCallback(_window, [](GLFWwindow* window, double, double y_offset) {
+        App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
+        app->on_scroll(y_offset);
     });
 
     _render_params.width = width;
@@ -109,5 +117,37 @@ void App::on_resize(int width, int height) {
     _height = static_cast<uint32_t>(height);
     _render_params.width = _width;
     _render_params.height = _height;
+    _ui_context.need_render = true;
+}
+
+void App::on_scroll(double y_offset) {
+    if (ImGui::GetIO().WantCaptureMouse) return;
+    double mouse_x, mouse_y;
+    glfwGetCursorPos(_window, &mouse_x, &mouse_y);
+
+    double zoom = safe_stod(_render_params.zoom);
+    double center_real = safe_stod(_render_params.center_real);
+    double center_imag = safe_stod(_render_params.center_imag);
+
+    double aspect = static_cast<double>(_width) / static_cast<double>(_height);
+    double vw = 3.5 / zoom;
+    double vh = vw / aspect;
+
+    double mouse_real = safe_stod(_render_params.center_real) + (mouse_x / _render_params.width - 0.5) * vw;
+    double mouse_imag = safe_stod(_render_params.center_imag) - (mouse_y / _render_params.height - 0.5) * vh;
+
+    double factor = std::pow(1.1, std::clamp(y_offset, -3.0, 3.0));
+    zoom *= factor;
+
+    double new_vw = 3.5 / zoom;
+    double new_vh = new_vw / aspect;
+
+    center_real = mouse_real - (mouse_x / _render_params.width - 0.5) * new_vw;
+    center_imag = mouse_imag + (mouse_y / _render_params.height - 0.5) * new_vh;
+
+    _render_params.zoom = std::to_string(zoom);
+    _render_params.center_real = std::to_string(center_real);
+    _render_params.center_imag = std::to_string(center_imag);
+
     _ui_context.need_render = true;
 }
