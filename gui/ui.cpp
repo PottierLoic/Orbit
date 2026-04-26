@@ -37,6 +37,17 @@ void UI::display_export_panel(UIContext& context) {
                 context.image_export_params.height = static_cast<uint32_t>(std::max(0, height));
             }
 
+            ImGui::Separator();
+
+            ImGui::InputText("Real", &context.image_export_params.center_real);
+            ImGui::InputText("Imaginary", &context.image_export_params.center_imag);
+            if (ImGui::Button("Use current position")) {
+                context.image_export_params.center_real = context.render_params.center_real;
+                context.image_export_params.center_imag = context.render_params.center_imag;
+            }
+
+            ImGui::Separator();
+
             if (ImGui::Button("Generate image")) {
                 context.need_image_export = true;
             }
@@ -70,8 +81,20 @@ void UI::display_export_panel(UIContext& context) {
 
             ImGui::Separator();
 
+            ImGui::InputText("Real", &context.video_export_params.center_real);
+            ImGui::InputText("Imaginary", &context.video_export_params.center_imag);
+            if (ImGui::Button("Use current position")) {
+                context.video_export_params.center_real = context.render_params.center_real;
+                context.video_export_params.center_imag = context.render_params.center_imag;
+            }
+
+            ImGui::Separator();
+
             ImGui::InputText("Start zoom", &context.animation_params.start_zoom);
             ImGui::InputText("Final zoom", &context.animation_params.final_zoom);
+            ImGui::InputDouble("Zoom factor", &context.animation_params.zoom_factor);
+
+            ImGui::Separator();
 
             if (ImGui::Button("Generate video")) {
                 context.need_video_export = true;
