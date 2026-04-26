@@ -41,7 +41,7 @@ int main () {
     animation_params.final_zoom = "70.0";
     animation_params.zoom_factor = 2.0;
 
-    export_video(*backend, palette, render_params, iteration_params, export_params, animation_params);
+    export_video(*backend, palette, render_params, iteration_params, export_params, animation_params, false);
 
     return 0;
 }

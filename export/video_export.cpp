@@ -6,7 +6,7 @@
 
 #include "color/apply.hpp"
 
-void export_video(IFractalBackend& backend, const Palette& palette, const RenderParams& render_params, const IterationParams& iteration_params, const VideoExportParams& export_params, const AnimationParams& animation_params) {
+void export_video(IFractalBackend& backend, const Palette& palette, const RenderParams& render_params, const IterationParams& iteration_params, const VideoExportParams& export_params, const AnimationParams& animation_params, bool smooth_coloring) {
     double start = std::stod(animation_params.start_zoom);
     double end = std::stod(animation_params.final_zoom);
     uint32_t frame_count = static_cast<uint32_t>(
@@ -37,7 +37,7 @@ void export_video(IFractalBackend& backend, const Palette& palette, const Render
 
     for (size_t i = 0; i < frame_count; i++) {
         std::vector<PixelValue> pixels = backend.render_frame(current_render_params, iteration_params);
-        std::vector<RGBA> colors = apply_palette(palette, pixels, false, iteration_params.max_iterations); // TODO: don't keep hardcoded smooth boolean
+        std::vector<RGBA> colors = apply_palette(palette, pixels, smooth_coloring, iteration_params.max_iterations);
         fwrite(colors.data(), sizeof(RGBA), colors.size(), pipe);
         double next_zoom = std::stod(current_render_params.zoom);
         next_zoom *= zoom_factor_per_frame;

@@ -9,8 +9,8 @@ void export_image(const std::vector<RGBA>& pixels, const ImageExportParams& expo
     }
 }
 
-void export_image(IFractalBackend& backend, const Palette& palette, const RenderParams& render_params, const IterationParams& iteration_params, const ImageExportParams& export_params) {
+void export_image(IFractalBackend& backend, const Palette& palette, const RenderParams& render_params, const IterationParams& iteration_params, const ImageExportParams& export_params, bool smooth_coloring) {
     auto pixels = backend.render_frame(render_params, iteration_params);
-    auto colors = apply_palette(palette, pixels, true, iteration_params.max_iterations);
+    auto colors = apply_palette(palette, pixels, smooth_coloring, iteration_params.max_iterations);
     export_image(colors, export_params);
 }

@@ -13,4 +13,4 @@
 #include "color/apply.hpp"
 
 void export_image(const std::vector<RGBA>& pixels, const ImageExportParams& export_params);
-void export_image(IFractalBackend& backend, const Palette& palette, const RenderParams& render_params, const IterationParams& iteration_params, const ImageExportParams& export_params);
+void export_image(IFractalBackend& backend, const Palette& palette, const RenderParams& render_params, const IterationParams& iteration_params, const ImageExportParams& export_params, bool smooth_coloring);
